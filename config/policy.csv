@@ -1,0 +1,8 @@
+p, user, categories, read
+p, user, categories, write
+p, user, products, read
+p, user, products, write
+p, admin, categories, read
+p, admin, products, read
+g, 6, admin
+g, 7, user
