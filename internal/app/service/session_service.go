@@ -111,8 +111,30 @@ func (ss *SessionService) Logout(req *schema.LogoutReq) error {
 
 	if err != nil {
 		log.Error(fmt.Errorf("error LoginService - Delete Session : %w", err))
-		return err
+
 	}
 
 	return nil
+}
+
+func (ss *SessionService) Show(req *schema.ShowReq) (schema.ShowResp, error) {
+	var resp schema.ShowResp
+
+	_, err := ss.authRepo.GetByUserID(req.UserID)
+	if err != nil {
+		log.Error(fmt.Errorf("error LoginService - Get UserID : %w", err))
+		return resp, errors.New("cant get user_id")
+	}
+
+	user, _ := ss.userRepo.GetByID(req.UserID)
+	if err != nil {
+		log.Error(fmt.Errorf("error LoginService - Get UserID : %w", err))
+		return resp, err
+	}
+
+	resp.Fullname = user.Fullname
+	resp.UserSince = user.CreatedAt.Format("02-01-2006")
+	resp.Username = user.Username
+
+	return resp, nil
 }

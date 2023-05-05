@@ -79,3 +79,17 @@ func (sc *SessionController) Logout(ctx *gin.Context) {
 
 	handler.ResponseSuccess(ctx, http.StatusOK, "success logout", nil)
 }
+
+func (sc *SessionController) ShowProfile(ctx *gin.Context) {
+	id, _ := strconv.Atoi(ctx.GetString("user_id"))
+	req := &schema.ShowReq{}
+
+	req.UserID = id
+
+	profile, err := sc.service.Show(req)
+	if err != nil {
+		handler.ResponseError(ctx, http.StatusUnprocessableEntity, err.Error())
+	}
+
+	handler.ResponseSuccess(ctx, http.StatusOK, "success", profile)
+}

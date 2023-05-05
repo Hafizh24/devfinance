@@ -52,7 +52,7 @@ func (ur *UserRepository) GetByID(id int) (model.User, error) {
 
 	var user model.User
 	var sqlStatement = `
-		SELECT id,username,fullname,password
+		SELECT id,username,fullname,password,created_at
 		FROM users
 		WHERE id = $1
 		LIMIT 1

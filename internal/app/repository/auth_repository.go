@@ -45,6 +45,22 @@ func (ar *AuthRepository) Find(userID int, RefreshToken string) (model.Auth, err
 
 	return auth, nil
 }
+func (ar *AuthRepository) GetByUserID(userID int) (model.Auth, error) {
+	var auth model.Auth
+	var sqlStatement = `
+		SELECT id, token, auth_type, user_id, expires_at
+		FROM auths
+		WHERE user_id = $1
+		`
+
+	err := ar.DB.QueryRowx(sqlStatement, userID).StructScan(&auth)
+	if err != nil {
+		log.Error(fmt.Errorf("error AuthRepository - GetByUserID : %w", err))
+		return auth, err
+	}
+
+	return auth, nil
+}
 func (ar *AuthRepository) Delete(userID int) error {
 
 	var sqlStatement = `
