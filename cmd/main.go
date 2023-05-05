@@ -67,24 +67,45 @@ func main() {
 	)
 
 	// ---------------------------------------------------------------------------------------
-	// tokenMaker := .NewTokenMaker(
-	// 	cfg.AccessTokenKey,
-	// 	cfg.RefreshTokenKey,
-	// 	cfg.AccessTokenDuration,
-	// 	cfg.RefreshTokenDuration,
-	// )
+	tokenMaker := service.NewTokenMaker(
+		cfg.AccessTokenKey,
+		cfg.RefreshTokenKey,
+		cfg.AccessTokenDuration,
+		cfg.RefreshTokenDuration,
+	)
 
 	categoryRepository := repository.NewCategoryRepository(DBConn)
+	registrationRepository := repository.NewUserRepository(DBConn)
+	userRepository := repository.NewUserRepository(DBConn)
+	authRepository := repository.NewAuthRepository(DBConn)
+
 	categoryService := service.NewCategoryService(categoryRepository)
+	registrationService := service.NewRegistrationService(registrationRepository)
+	sessionService := service.NewSessionService(userRepository, authRepository, tokenMaker)
+
 	categoryController := controller.NewCategoryController(categoryService)
+	registrationController := controller.NewRegistrationController(registrationService)
+	sessionController := controller.NewSessionController(sessionService, tokenMaker)
 
 	// Entrypoint
 
-	r.GET("/categories", categoryController.BrowseCategory)
-	r.GET("/categories/:id", categoryController.DetailCategory)
-	r.POST("/categories", categoryController.CreateCategory)
-	r.PATCH("/categories/:id", categoryController.UpdateCategory)
-	r.DELETE("/categories/:id", categoryController.DeleteCategory)
+	route := r.Group("/api/auth")
+	{
+		route.POST("/register", registrationController.Register)
+		route.POST("/login", sessionController.Login)
+		route.GET("/refresh", sessionController.Refresh)
+	}
+
+	secured := r.Group("/api").Use(middleware.AuthMiddleware(tokenMaker))
+	{
+		secured.GET("/auth/logout", sessionController.Logout)
+
+		secured.GET("/categories", categoryController.BrowseCategory)
+		secured.GET("/categories/:id", categoryController.DetailCategory)
+		secured.POST("/categories", categoryController.CreateCategory)
+		secured.PATCH("/categories/:id", categoryController.UpdateCategory)
+		secured.DELETE("/categories/:id", categoryController.DeleteCategory)
+	}
 
 	appPort := fmt.Sprintf(":%s", cfg.ServerPort)
 	// nolint:errcheck

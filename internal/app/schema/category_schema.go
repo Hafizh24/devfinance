@@ -1,7 +1,5 @@
 package schema
 
-import "time"
-
 type GetCategoryResp struct {
 	ID          int    `json:"id"`
 	Name        string `json:"name"`
@@ -9,12 +7,11 @@ type GetCategoryResp struct {
 }
 
 type CreateCategoryReq struct {
-	Name        string    `validate:"required" json:"name"`
-	Description string    `validate:"required" json:"description"`
-	Created_at  time.Time `json:"created_at"`
+	Name        string `validate:"required" json:"name"`
+	Description string `validate:"required" json:"description"`
 }
 
 type UpdateCategoryReq struct {
 	Name        string `json:"name" validate:"required"`
-	Description string `json:"description"`
+	Description string `json:"description" validate:"required"`
 }

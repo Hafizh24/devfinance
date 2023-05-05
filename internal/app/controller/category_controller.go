@@ -2,7 +2,6 @@ package controller
 
 import (
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/hafizh24/devfinance/internal/app/schema"
@@ -33,7 +32,6 @@ func (cc *CategoryController) CreateCategory(ctx *gin.Context) {
 	if handler.BindAndCheck(ctx, req) {
 		return
 	}
-	req.Created_at = time.Now()
 
 	err := cc.service.Create(req)
 	if err != nil {
