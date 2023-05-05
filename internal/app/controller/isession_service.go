@@ -6,4 +6,5 @@ type SessionService interface {
 	Login(req *schema.LoginReq) (schema.LoginResp, error)
 	RefreshToken(req *schema.RefreshTokenReq) (schema.RefreshTokenResp, error)
 	Logout(req *schema.LogoutReq) error
+	Show(req *schema.ShowReq) (schema.ShowResp, error)
 }

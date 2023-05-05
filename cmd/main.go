@@ -78,33 +78,43 @@ func main() {
 	registrationRepository := repository.NewUserRepository(DBConn)
 	userRepository := repository.NewUserRepository(DBConn)
 	authRepository := repository.NewAuthRepository(DBConn)
+	currencyRepository := repository.NewCurrencyRepository(DBConn)
 
 	categoryService := service.NewCategoryService(categoryRepository)
 	registrationService := service.NewRegistrationService(registrationRepository)
 	sessionService := service.NewSessionService(userRepository, authRepository, tokenMaker)
+	currencyService := service.NewCurrencyService(currencyRepository)
 
 	categoryController := controller.NewCategoryController(categoryService)
 	registrationController := controller.NewRegistrationController(registrationService)
 	sessionController := controller.NewSessionController(sessionService, tokenMaker)
+	currencyController := controller.NewCurrencyController(currencyService)
 
 	// Entrypoint
 
 	route := r.Group("/api/auth")
 	{
-		route.POST("/register", registrationController.Register)
-		route.POST("/login", sessionController.Login)
+		route.POST("/signup", registrationController.Register)
+		route.POST("/signin", sessionController.Login)
 		route.GET("/refresh", sessionController.Refresh)
 	}
 
 	secured := r.Group("/api").Use(middleware.AuthMiddleware(tokenMaker))
 	{
-		secured.GET("/auth/logout", sessionController.Logout)
+		secured.GET("/auth/signout", sessionController.Logout)
+		secured.GET("/auth/showprofile", sessionController.ShowProfile)
 
 		secured.GET("/categories", categoryController.BrowseCategory)
 		secured.GET("/categories/:id", categoryController.DetailCategory)
 		secured.POST("/categories", categoryController.CreateCategory)
 		secured.PATCH("/categories/:id", categoryController.UpdateCategory)
 		secured.DELETE("/categories/:id", categoryController.DeleteCategory)
+
+		secured.GET("/currencies", currencyController.BrowseCurrency)
+		secured.GET("/currencies/:id", currencyController.DetailCurrency)
+		secured.POST("/currencies", currencyController.CreateCurrency)
+		secured.PATCH("/currencies/:id", currencyController.UpdateCurrency)
+		secured.DELETE("/currencies/:id", currencyController.DeleteCurrency)
 	}
 
 	appPort := fmt.Sprintf(":%s", cfg.ServerPort)

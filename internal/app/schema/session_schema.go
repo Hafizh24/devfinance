@@ -21,3 +21,12 @@ type RefreshTokenReq struct {
 type LogoutReq struct {
 	UserID int `json:"user_id"`
 }
+
+type ShowReq struct {
+	UserID int `json:"user_id"`
+}
+type ShowResp struct {
+	Fullname  string `json:"fullname"`
+	UserSince string `json:"user_since"`
+	Username  string `validate:"required" json:"username"`
+}

@@ -10,6 +10,14 @@ var (
 	InternalServerError     = "internal server error"
 	RequestFormError        = "request format is not valid"
 )
+var (
+	CurrencyNotFound        = "Currency not found"
+	CurrencyCannotCreate    = "cannot Create currency"
+	CurrencyCannotBrowse    = "cannot Browse currency"
+	CurrencyCannotUpdate    = "cannot Update currency"
+	CurrencyCannotDelete    = "cannot Delete currency"
+	CurrencyCannotGetDetail = "cannot get detail"
+)
 
 var (
 	UserAlreadyExist = "user already exist"
@@ -21,15 +29,6 @@ var (
 	UserNotLogin     = "user has not logged in yet"
 	NotAuthorized    = "You are not authorized to access this resource"
 	ErrAuthorize     = "error occurred when authorizing user"
-)
-
-var (
-	ProductNotFound        = "Product not found"
-	ProductCannotCreate    = "cannot Create Product"
-	ProductCannotBrowse    = "cannot Browse Product"
-	ProductCannotUpdate    = "cannot Update Product"
-	ProductCannotDelete    = "cannot Delete Product"
-	ProductCannotGetDetail = "cannot get detail"
 )
 
 var (
