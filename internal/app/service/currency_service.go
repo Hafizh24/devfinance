@@ -70,7 +70,7 @@ func (cs *CurrencyService) UpdateByID(id string, req *schema.UpdateCurrencyReq) 
 	updateData.Description = req.Description
 
 	check, err := cs.repo.GetByID(id)
-	if check.ID == 0 {
+	if check.ID == 0 && err != nil {
 		return errors.New(reason.CurrencyNotFound)
 	}
 

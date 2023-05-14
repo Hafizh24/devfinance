@@ -11,7 +11,7 @@ var (
 	RequestFormError        = "request format is not valid"
 )
 var (
-	CurrencyNotFound        = "Currency not found"
+	CurrencyNotFound        = "currency not found"
 	CurrencyCannotCreate    = "cannot Create currency"
 	CurrencyCannotBrowse    = "cannot Browse currency"
 	CurrencyCannotUpdate    = "cannot Update currency"
@@ -20,9 +20,18 @@ var (
 )
 
 var (
+	TransactionCannotCreate    = "cannot Create transaction"
+	TransactionCannotBrowse    = "cannot Browse transaction"
+	TransactionCannotGetDetail = "cannot get detail transaction"
+	TransactionCannotDelete    = "cannot Delete transaction"
+	TransactionCannotUpdate    = "cannot Update transaction"
+	TransactionNotFound        = "transaction not found"
+)
+var (
 	UserAlreadyExist = "user already exist"
 	RegisterFailed   = "cannot register user"
 	UserNotFound     = "user not found"
+	UserCannotDelete = "user cannot delete"
 	LoginFailed      = "login failed, please check your email or password"
 	SaveToken        = "cannot save refresh token"
 	UserSignOut      = "user has sign out"

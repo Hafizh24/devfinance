@@ -79,16 +79,19 @@ func main() {
 	userRepository := repository.NewUserRepository(DBConn)
 	authRepository := repository.NewAuthRepository(DBConn)
 	currencyRepository := repository.NewCurrencyRepository(DBConn)
+	transactionRepository := repository.NewTransactionRepository(DBConn)
 
 	categoryService := service.NewCategoryService(categoryRepository)
 	registrationService := service.NewRegistrationService(registrationRepository)
 	sessionService := service.NewSessionService(userRepository, authRepository, tokenMaker)
 	currencyService := service.NewCurrencyService(currencyRepository)
+	transactionService := service.NewTransactionService(transactionRepository, authRepository)
 
 	categoryController := controller.NewCategoryController(categoryService)
 	registrationController := controller.NewRegistrationController(registrationService)
 	sessionController := controller.NewSessionController(sessionService, tokenMaker)
 	currencyController := controller.NewCurrencyController(currencyService)
+	transactionController := controller.NewTransactionController(transactionService)
 
 	// Entrypoint
 
@@ -101,20 +104,27 @@ func main() {
 
 	secured := r.Group("/api").Use(middleware.AuthMiddleware(tokenMaker))
 	{
-		secured.GET("/auth/signout", sessionController.Logout)
-		secured.GET("/auth/showprofile", sessionController.ShowProfile)
+		secured.GET("/auth/signout", middleware.AuthorizationMiddleware("auth", "read", enforcer), sessionController.Logout)
+		secured.GET("/auth/showprofile", middleware.AuthorizationMiddleware("auth", "read", enforcer), sessionController.ShowProfile)
+		secured.DELETE("/auth/delete/:id", middleware.AuthorizationMiddleware("auth", "write", enforcer), registrationController.DeleteUser)
 
-		secured.GET("/categories", categoryController.BrowseCategory)
-		secured.GET("/categories/:id", categoryController.DetailCategory)
-		secured.POST("/categories", categoryController.CreateCategory)
-		secured.PATCH("/categories/:id", categoryController.UpdateCategory)
-		secured.DELETE("/categories/:id", categoryController.DeleteCategory)
+		secured.GET("/categories", middleware.AuthorizationMiddleware("categories", "read", enforcer), categoryController.BrowseCategory)
+		secured.GET("/categories/:id", middleware.AuthorizationMiddleware("categories", "read", enforcer), categoryController.DetailCategory)
+		secured.POST("/categories", middleware.AuthorizationMiddleware("categories", "write", enforcer), categoryController.CreateCategory)
+		secured.PATCH("/categories/:id", middleware.AuthorizationMiddleware("categories", "write", enforcer), categoryController.UpdateCategory)
+		secured.DELETE("/categories/:id", middleware.AuthorizationMiddleware("categories", "write", enforcer), categoryController.DeleteCategory)
 
-		secured.GET("/currencies", currencyController.BrowseCurrency)
-		secured.GET("/currencies/:id", currencyController.DetailCurrency)
-		secured.POST("/currencies", currencyController.CreateCurrency)
-		secured.PATCH("/currencies/:id", currencyController.UpdateCurrency)
-		secured.DELETE("/currencies/:id", currencyController.DeleteCurrency)
+		secured.GET("/currencies", middleware.AuthorizationMiddleware("currencies", "read", enforcer), currencyController.BrowseCurrency)
+		secured.GET("/currencies/:id", middleware.AuthorizationMiddleware("currencies", "read", enforcer), currencyController.DetailCurrency)
+		secured.POST("/currencies", middleware.AuthorizationMiddleware("currencies", "write", enforcer), currencyController.CreateCurrency)
+		secured.PATCH("/currencies/:id", middleware.AuthorizationMiddleware("currencies", "write", enforcer), currencyController.UpdateCurrency)
+		secured.DELETE("/currencies/:id", middleware.AuthorizationMiddleware("currencies", "write", enforcer), currencyController.DeleteCurrency)
+
+		secured.GET("/transactions/show", middleware.AuthorizationMiddleware("transactions", "read", enforcer), transactionController.ShowRecaps)
+		secured.GET("/transactions/show/:type", middleware.AuthorizationMiddleware("transactions", "read", enforcer), transactionController.ShowByType)
+		secured.POST("/transactions", middleware.AuthorizationMiddleware("transactions", "write", enforcer), transactionController.CreateTransaction)
+		secured.DELETE("/transactions/:id", middleware.AuthorizationMiddleware("transactions", "write", enforcer), transactionController.DeleteTransaction)
+		secured.PATCH("/transactions/:id", middleware.AuthorizationMiddleware("transactions", "write", enforcer), transactionController.UpdateTransaction)
 	}
 
 	appPort := fmt.Sprintf(":%s", cfg.ServerPort)

@@ -1,1 +1,4 @@
 app.env
+uploader_service.go
+tmp
+.air.toml

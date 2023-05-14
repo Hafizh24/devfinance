@@ -66,3 +66,19 @@ func (ur *UserRepository) GetByID(id int) (model.User, error) {
 	return user, nil
 
 }
+
+func (ur *UserRepository) Delete(id int) (model.User, error) {
+	var user model.User
+	var sqlStatement = `
+	DELETE FROM users
+	WHERE id = $1
+	`
+
+	_, err := ur.DB.Exec(sqlStatement, id)
+	if err != nil {
+		log.Error(fmt.Errorf("error UserRepository - Delete : %w", err))
+		return user, err
+	}
+
+	return user, nil
+}

@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/hafizh24/devfinance/internal/app/schema"
@@ -10,6 +11,7 @@ import (
 
 type RegistrationService interface {
 	Register(req *schema.RegisterReq) error
+	DeleteByID(id int) (*schema.GetUserResp, error)
 }
 
 type RegistrationController struct {
@@ -34,4 +36,16 @@ func (rc *RegistrationController) Register(ctx *gin.Context) {
 	}
 
 	handler.ResponseSuccess(ctx, http.StatusCreated, "success register", nil)
+}
+
+func (rc *RegistrationController) DeleteUser(ctx *gin.Context) {
+	id, _ := strconv.Atoi(ctx.Param("id"))
+
+	_, err := rc.service.DeleteByID(id)
+	if err != nil {
+		handler.ResponseError(ctx, http.StatusUnprocessableEntity, err.Error())
+		return
+	}
+
+	handler.ResponseSuccess(ctx, http.StatusOK, "success delete user", nil)
 }

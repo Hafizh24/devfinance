@@ -70,7 +70,7 @@ func (cs *CategoryService) UpdateByID(id string, req *schema.UpdateCategoryReq) 
 	updateData.Description = req.Description
 
 	check, err := cs.repo.GetByID(id)
-	if check.ID == 0 {
+	if check.ID == 0 && err != nil {
 		return errors.New(reason.CategoryNotFound)
 	}
 
@@ -83,10 +83,11 @@ func (cs *CategoryService) UpdateByID(id string, req *schema.UpdateCategoryReq) 
 }
 
 func (cs *CategoryService) DeleteByID(id string) (*schema.GetCategoryResp, error) {
+
 	resp := &schema.GetCategoryResp{}
 
 	check, err := cs.repo.GetByID(id)
-	if check.ID == 0 {
+	if check.ID == 0 && err != nil {
 		return nil, errors.New(reason.CategoryNotFound)
 	}
 
