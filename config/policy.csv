@@ -1,8 +1,15 @@
 p, user, categories, read
 p, user, categories, write
-p, user, products, read
-p, user, products, write
+p, user, currencies, read
+p, user, currencies, write
+p, user, transactions, read
+p, user, transactions, write
+p, user, auth, read
 p, admin, categories, read
-p, admin, products, read
-g, 6, admin
-g, 7, user
+p, admin, currencies, read
+p, admin, auth, read
+p, admin, transactions, read
+p, admin, auth, write
+g, 5, admin
+g, 1, user
+g, 2, user

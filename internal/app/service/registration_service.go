@@ -49,3 +49,23 @@ func (rs *RegistrationService) hashPassword(password string) (string, error) {
 	return string(bytePassword), nil
 
 }
+
+func (rs *RegistrationService) DeleteByID(id int) (*schema.GetUserResp, error) {
+	resp := &schema.GetUserResp{}
+
+	check, err := rs.repo.GetByID(id)
+	if check.ID == 0 && err != nil {
+		return nil, errors.New(reason.UserNotFound)
+	}
+
+	user, err := rs.repo.Delete(id)
+	if err != nil {
+		return resp, errors.New(reason.UserCannotDelete)
+	}
+
+	resp.Fullname = user.Fullname
+	resp.Username = user.Username
+	resp.Password = user.Password
+
+	return resp, nil
+}

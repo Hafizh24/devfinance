@@ -5,3 +5,9 @@ type RegisterReq struct {
 	Password string `validate:"required,min=8,alphanum" json:"password"`
 	Username string `validate:"required,alphanum" json:"username"`
 }
+
+type GetUserResp struct {
+	Fullname string `json:"fullname"`
+	Password string `json:"password"`
+	Username string `json:"username"`
+}

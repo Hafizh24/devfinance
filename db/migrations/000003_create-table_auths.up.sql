@@ -4,5 +4,5 @@ CREATE TABLE IF NOT EXISTS auths  (
     auth_type VARCHAR,
     user_id  BIGINT NOT NULL,
     expires_at TIMESTAMP,
-    FOREIGN key (user_id) REFERENCES users(id)
+    FOREIGN key (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
