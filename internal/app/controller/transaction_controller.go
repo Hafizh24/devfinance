@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -42,7 +41,6 @@ func (tc *TransactionController) CreateTransaction(ctx *gin.Context) {
 	}
 
 	req.UserID = id
-	fmt.Println(req.UserID)
 
 	err := tc.service.Create(req)
 	if err != nil {
@@ -61,7 +59,22 @@ func (tc *TransactionController) ShowByType(ctx *gin.Context) {
 	req.UserID = id
 	req.Type = param
 
+	if handler.BindAndCheck(ctx, req) {
+		return
+	}
+
 	resp, err := tc.service.GetByType(req)
+	if err != nil {
+		handler.ResponseError(ctx, http.StatusUnprocessableEntity, err.Error())
+		return
+	}
+
+	handler.ResponseSuccess(ctx, http.StatusOK, "success get detail transaction", resp)
+}
+
+func (tc *TransactionController) DetailTransaction(ctx *gin.Context) {
+	id, _ := ctx.Params.Get("id")
+	resp, err := tc.service.GetByID(id)
 	if err != nil {
 		handler.ResponseError(ctx, http.StatusUnprocessableEntity, err.Error())
 		return

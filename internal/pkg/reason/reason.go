@@ -6,7 +6,7 @@ var (
 	CategoryCannotBrowse    = "cannot Browse Category"
 	CategoryCannotUpdate    = "cannot Update Category"
 	CategoryCannotDelete    = "cannot Delete Category"
-	CategoryCannotGetDetail = "cannot get detail"
+	CategoryCannotGetDetail = "cannot get detail category"
 	InternalServerError     = "internal server error"
 	RequestFormError        = "request format is not valid"
 )
@@ -16,7 +16,7 @@ var (
 	CurrencyCannotBrowse    = "cannot Browse currency"
 	CurrencyCannotUpdate    = "cannot Update currency"
 	CurrencyCannotDelete    = "cannot Delete currency"
-	CurrencyCannotGetDetail = "cannot get detail"
+	CurrencyCannotGetDetail = "cannot get detail currency"
 )
 
 var (
