@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS transactions (
     category_id bigint not null,
     currency_id bigint not null ,
     user_id bigint not null,
+    image_url varchar(128) not null,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP,
     deleted_at TIMESTAMP,

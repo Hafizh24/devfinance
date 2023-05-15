@@ -67,12 +67,6 @@ func main() {
 	)
 
 	// ---------------------------------------------------------------------------------------
-	tokenMaker := service.NewTokenMaker(
-		cfg.AccessTokenKey,
-		cfg.RefreshTokenKey,
-		cfg.AccessTokenDuration,
-		cfg.RefreshTokenDuration,
-	)
 
 	categoryRepository := repository.NewCategoryRepository(DBConn)
 	registrationRepository := repository.NewUserRepository(DBConn)
@@ -81,11 +75,23 @@ func main() {
 	currencyRepository := repository.NewCurrencyRepository(DBConn)
 	transactionRepository := repository.NewTransactionRepository(DBConn)
 
+	tokenMaker := service.NewTokenMaker(
+		cfg.AccessTokenKey,
+		cfg.RefreshTokenKey,
+		cfg.AccessTokenDuration,
+		cfg.RefreshTokenDuration,
+	)
+	uploaderservice := service.NewUploaderService(
+		cfg.CloudinaryCloudName,
+		cfg.CloudinaryApiKey,
+		cfg.CloudinaryApiSecret,
+		cfg.CloudinaryUploadFolder,
+	)
 	categoryService := service.NewCategoryService(categoryRepository)
 	registrationService := service.NewRegistrationService(registrationRepository)
 	sessionService := service.NewSessionService(userRepository, authRepository, tokenMaker)
 	currencyService := service.NewCurrencyService(currencyRepository)
-	transactionService := service.NewTransactionService(transactionRepository, authRepository)
+	transactionService := service.NewTransactionService(transactionRepository, authRepository, uploaderservice)
 
 	categoryController := controller.NewCategoryController(categoryService)
 	registrationController := controller.NewRegistrationController(registrationService)
@@ -120,9 +126,10 @@ func main() {
 		secured.PATCH("/currencies/:id", middleware.AuthorizationMiddleware("currencies", "write", enforcer), currencyController.UpdateCurrency)
 		secured.DELETE("/currencies/:id", middleware.AuthorizationMiddleware("currencies", "write", enforcer), currencyController.DeleteCurrency)
 
-		secured.GET("/transactions/show", middleware.AuthorizationMiddleware("transactions", "read", enforcer), transactionController.ShowRecaps)
-		secured.GET("/transactions/show/:type", middleware.AuthorizationMiddleware("transactions", "read", enforcer), transactionController.ShowByType)
+		secured.GET("/transactions/recaps", middleware.AuthorizationMiddleware("transactions", "read", enforcer), transactionController.ShowRecaps)
+		secured.GET("/transactions/recaps/:type", middleware.AuthorizationMiddleware("transactions", "read", enforcer), transactionController.ShowByType)
 		secured.POST("/transactions", middleware.AuthorizationMiddleware("transactions", "write", enforcer), transactionController.CreateTransaction)
+		secured.GET("/transactions/:id", middleware.AuthorizationMiddleware("transactions", "write", enforcer), transactionController.DetailTransaction)
 		secured.DELETE("/transactions/:id", middleware.AuthorizationMiddleware("transactions", "write", enforcer), transactionController.DeleteTransaction)
 		secured.PATCH("/transactions/:id", middleware.AuthorizationMiddleware("transactions", "write", enforcer), transactionController.UpdateTransaction)
 	}

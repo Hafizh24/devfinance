@@ -10,6 +10,6 @@ p, admin, currencies, read
 p, admin, auth, read
 p, admin, transactions, read
 p, admin, auth, write
-g, 5, admin
+g, 3, admin
 g, 1, user
 g, 2, user

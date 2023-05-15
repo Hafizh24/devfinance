@@ -4,18 +4,26 @@ import (
 	"errors"
 	"fmt"
 
+	"mime/multipart"
+
 	"github.com/hafizh24/devfinance/internal/app/model"
 	"github.com/hafizh24/devfinance/internal/app/schema"
 	"github.com/hafizh24/devfinance/internal/pkg/reason"
+	log "github.com/sirupsen/logrus"
 )
+
+type ImageUploader interface {
+	UploadImage(input *multipart.FileHeader) (string, error)
+}
 
 type TransactionService struct {
 	transactionrepo TransactionRepository
 	authrepo        AuthRepository
+	uploader        ImageUploader
 }
 
-func NewTransactionService(transactionrepo TransactionRepository, authrepo AuthRepository) *TransactionService {
-	return &TransactionService{transactionrepo: transactionrepo, authrepo: authrepo}
+func NewTransactionService(transactionrepo TransactionRepository, authrepo AuthRepository, uploader ImageUploader) *TransactionService {
+	return &TransactionService{transactionrepo: transactionrepo, authrepo: authrepo, uploader: uploader}
 }
 
 func (ts *TransactionService) Create(req *schema.CreateTransactionReq) error {
@@ -28,7 +36,15 @@ func (ts *TransactionService) Create(req *schema.CreateTransactionReq) error {
 	insertData.CurrencyID = req.CurrencyID
 	insertData.UserID = req.UserID
 
-	err := ts.transactionrepo.Create(insertData)
+	imageURL, err := ts.uploader.UploadImage(req.Image)
+	if err != nil {
+		log.Error("upload image transaction %w", err)
+		return errors.New(reason.TransactionCannotCreate)
+	}
+
+	insertData.ImageUrl = &imageURL
+
+	err = ts.transactionrepo.Create(insertData)
 	if err != nil {
 		return errors.New(reason.TransactionCannotCreate)
 	}
@@ -56,6 +72,7 @@ func (ts *TransactionService) ShowAll(req *schema.GetTransactionReq) ([]schema.G
 		respData.Category = value.Name
 		respData.Type = value.Type
 		respData.Note = value.Note
+		respData.ImageUrl = value.ImageUrl
 		resp = append(resp, respData)
 	}
 
@@ -81,6 +98,7 @@ func (ts *TransactionService) GetByType(req *schema.GetTransactionReq) ([]schema
 		respData.Category = value.Name
 		respData.Type = value.Type
 		respData.Note = value.Note
+		respData.ImageUrl = value.ImageUrl
 		resp = append(resp, respData)
 	}
 
@@ -121,6 +139,25 @@ func (ts *TransactionService) DeleteByID(id string) (*schema.GetTransactionResp,
 	if err != nil {
 		return resp, errors.New(reason.TransactionCannotDelete)
 	}
+
+	return resp, nil
+}
+
+func (ts *TransactionService) GetByID(id string) (schema.GetTransactionResp, error) {
+	var resp schema.GetTransactionResp
+
+	transaction, err := ts.transactionrepo.GetByID(id)
+	if err != nil {
+		return resp, errors.New(reason.TransactionCannotGetDetail)
+	}
+
+	resp.ID = transaction.ID
+	resp.Date = transaction.CreatedAt.Format("02-01-2006")
+	resp.Amount = transaction.TotalAmount
+	resp.Category = transaction.Name
+	resp.Type = transaction.Type
+	resp.Note = transaction.Note
+	resp.ImageUrl = transaction.ImageUrl
 
 	return resp, nil
 }

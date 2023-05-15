@@ -27,7 +27,7 @@ func ResponseError(ctx *gin.Context, statusCode int, message string) {
 }
 
 func BindAndCheck(ctx *gin.Context, data interface{}) bool {
-	err := ctx.ShouldBindJSON(data)
+	err := ctx.ShouldBind(data)
 	if err != nil {
 		ResponseError(ctx, http.StatusUnprocessableEntity, err.Error())
 		return true

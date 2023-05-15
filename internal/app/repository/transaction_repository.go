@@ -18,11 +18,11 @@ func NewTransactionRepository(db *sqlx.DB) *TransactionRepository {
 
 func (tr *TransactionRepository) Create(Transaction model.Transaction) error {
 	var sqlStatement = `
-		INSERT INTO transactions (type, note, amount, category_id, currency_id, user_id)
-		VALUES ($1, $2, $3, $4, $5, $6)
+		INSERT INTO transactions (type, note, amount, category_id, currency_id, user_id, image_url)
+		VALUES ($1, $2, $3, $4, $5, $6, $7)
 		`
 
-	_, err := tr.DB.Exec(sqlStatement, Transaction.Type, Transaction.Note, Transaction.Amount, Transaction.CategoryID, Transaction.CurrencyID, Transaction.UserID)
+	_, err := tr.DB.Exec(sqlStatement, Transaction.Type, Transaction.Note, Transaction.Amount, Transaction.CategoryID, Transaction.CurrencyID, Transaction.UserID, Transaction.ImageUrl)
 	if err != nil {
 		log.Error(fmt.Errorf("error Transaction Repository - Create : %w", err))
 		return err
@@ -35,7 +35,7 @@ func (tr *TransactionRepository) Browse(UserID int) ([]model.Transaction, error)
 	var (
 		transactions []model.Transaction
 		sqlStatement = `
-	SELECT transactions.id,transactions.type,transactions.note,transactions.amount,transactions.created_at,categories.name,currencies.code || ' ' || transactions.amount AS total_amount
+	SELECT transactions.id,transactions.type,transactions.note,transactions.amount,transactions.image_url,transactions.created_at,categories.name,currencies.code || ' ' || transactions.amount AS total_amount
 	FROM transactions
 	INNER JOIN categories ON transactions.category_id = categories.id
 	INNER JOIN currencies ON transactions.currency_id = currencies.id
@@ -61,7 +61,7 @@ func (tr *TransactionRepository) Browse(UserID int) ([]model.Transaction, error)
 func (tr *TransactionRepository) GetByID(id string) (model.Transaction, error) {
 	var Transaction model.Transaction
 	var sqlStatement = `
-	SELECT id,type,note,amount,category_id,currency_id
+	SELECT id,type,note,amount,category_id,currency_id,image_url
 	FROM transactions
 	WHERE id = $1
 	`
@@ -77,7 +77,7 @@ func (tr *TransactionRepository) GetByType(Type string, UserID int) ([]model.Tra
 	var transactions []model.Transaction
 
 	var sqlStatement = `
-	SELECT transactions.id,transactions.type,transactions.note,transactions.amount,transactions.created_at,categories.name,currencies.code || ' ' || transactions.amount AS total_amount
+	SELECT transactions.id,transactions.type,transactions.note,transactions.amount,image_url,transactions.created_at,categories.name,currencies.code || ' ' || transactions.amount AS total_amount
 	FROM transactions
 	INNER JOIN categories ON transactions.category_id = categories.id
 	INNER JOIN currencies ON transactions.currency_id = currencies.id
