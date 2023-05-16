@@ -1,0 +1,74 @@
+get:
+  description: List category data
+  summary: To get list category data
+  tags:
+    - Category
+  security:
+    - bearerAuth: []
+  responses:
+    200:
+      description: Success get list category
+      content:
+        application/json:
+          schema:
+            $ref: "entity.yml#/schemas/ResponseListCategory"
+
+    401:
+      description: "Error: Unauthorized"
+      content:
+        application/json:
+          schema:
+            $ref: "./../common.yml#/schemas/ResponseUnauthorized401"
+          example:
+            status: error
+            message: request does not contain an access token
+            data:
+    422:
+      description: Cannot get list category
+      content:
+        application/json:
+          schema:
+            $ref: "./../common.yml#/schemas/ResponseEntity422"
+          example:
+            status: error
+            message: Cannot Browse Category
+            data:
+
+post:
+  description: create category data
+  summary: To create category data
+  tags:
+    - Category
+  security:
+    - bearerAuth: []
+
+  requestBody:
+    description: create a new category data
+    content:
+      application/json:
+        schema:
+          $ref: "entity.yml#/schemas/RequestCreateCategory"
+        examples:
+          Buku:
+            value:
+              name: "buku"
+              description: "buku baru dan bekas"
+          otomotif:
+            value:
+              description: "kendaraan"
+    required: true
+
+  responses:
+    201:
+      description: Success create category data
+      content:
+        application/json:
+          schema:
+            $ref: "entity.yml#/schemas/ResponseCreate201"
+
+    422:
+      description: format is not valid
+      content:
+        application/json:
+          schema:
+            $ref: "./../common.yml#/schemas/ResponseEntity422"

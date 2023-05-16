@@ -1,0 +1,40 @@
+openapi: 3.0.0
+info:
+  title: DevFinance API
+  description: Documentation for devfinance api.
+  version: 1.0.0
+servers:
+  - url: http://0.0.0.0:8086
+    description: URL development
+  - url: http://staging.devstore.com
+    description: URL staging
+
+tags:
+  - name: Category
+    description: CRUD data category.
+  - name: Currency
+    description: CRUD data currency.
+  - name: Registration
+    description: register a new user.
+
+paths:
+  /api/categories:
+    $ref: "./resources/categories/collection.yml"
+
+  /api/categories/{id}:
+    $ref: "./resources/categories/member.yml"
+
+  /api/currencies:
+    $ref: "./resources/currencies/collection.yml"
+
+  /api/currencies/{id}:
+    $ref: "./resources/currencies/member.yml"
+  /api/auth/signup:
+    $ref: "./resources/registration/collection.yml"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

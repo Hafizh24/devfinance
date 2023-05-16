@@ -1,0 +1,167 @@
+schemas:
+  ResponseListCategory:
+    type: object
+    properties:
+      status:
+        type: string
+        example: success
+      message:
+        type: string
+        example: success get list category
+      data:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            name:
+              type: string
+              example: "my category"
+            description:
+              type: string
+              example: "description for my category"
+
+  ResponseDetail200:
+    type: object
+    properties:
+      status:
+        type: string
+        example: success
+      message:
+        type: string
+        example: success get detail category
+      data:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            name:
+              type: string
+              example: "my category"
+            description:
+              type: string
+              example: "description for my category"
+
+  ResponseDetail422:
+    type: object
+    properties:
+      status:
+        type: string
+        example: error
+      message:
+        type: string
+        example: cannot get detail
+      data:
+        type: array
+        items:
+          type: object
+          properties:
+
+  ResponseCreate201:
+    type: object
+    properties:
+      status:
+        type: string
+        example: success
+      message:
+        type: string
+        example: success create category
+      data:
+        type: array
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+              example: "my category"
+            description:
+              type: string
+              example: "description for my category"
+
+  ResponseCreate422:
+    type: object
+    properties:
+      status:
+        type: string
+        example: error
+      message:
+        type: string
+        example: request format is not valid
+      data:
+        type: array
+        items:
+          type: object
+          properties:
+
+  RequestCreateCategory:
+    type: object
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+
+  ResponseDelete200:
+    type: object
+    properties:
+      status:
+        type: string
+        example: success
+      message:
+        type: string
+        example: success deleted category
+      data:
+        type: array
+        items:
+          type: object
+          properties:
+
+  ResponseDelete422:
+    type: object
+    properties:
+      status:
+        type: string
+        example: error
+      message:
+        type: string
+        example: Cannot Delete Category
+      data:
+        type: array
+        items:
+          type: object
+          properties:
+
+  ResponseUpdate200:
+    type: object
+    properties:
+      status:
+        type: string
+        example: success
+      message:
+        type: string
+        example: success update category
+      data:
+        type: array
+        items:
+          type: object
+          properties:
+
+  ResponseUpdate422:
+    type: object
+    properties:
+      status:
+        type: string
+        example: error
+      message:
+        type: string
+        example: cannot update category
+      data:
+        type: array
+        items:
+          type: object
+          properties:

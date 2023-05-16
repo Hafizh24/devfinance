@@ -1,0 +1,103 @@
+get:
+  description: Detail category data
+  summary: To get detail category data
+  parameters:
+    - in: path
+      name: id
+      description: The category ID
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+      example: 1
+  tags:
+    - Category
+  responses:
+    200:
+      description: Success get detail category
+      content:
+        application/json:
+          schema:
+            $ref: "entity.yml#/schemas/ResponseDetail200"
+
+    422:
+      description: cannot get detail category
+      content:
+        application/json:
+          schema:
+            $ref: "entity.yml#/schemas/ResponseDetail422"
+
+patch:
+  description: Update category data
+  summary: To update category data
+  parameters:
+    - in: path
+      name: id
+      description: The category ID
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+      example: 1
+  tags:
+    - Category
+
+  requestBody:
+    description: update category data
+    content:
+      application/json:
+        schema:
+          $ref: "entity.yml#/schemas/RequestCreateCategory"
+        examples:
+          Furnitur:
+            value:
+              name: "furnitur"
+              description: "peralatan rumah"
+          otomotif:
+            value:
+              description: "kendaraan"
+    required: true
+
+  responses:
+    200:
+      description: Success update category data
+      content:
+        application/json:
+          schema:
+            $ref: "entity.yml#/schemas/ResponseUpdate200"
+
+    422:
+      description: cannot delete category data
+      content:
+        application/json:
+          schema:
+            $ref: "entity.yml#/schemas/ResponseUpdate422"
+
+delete:
+  description: Delete category data
+  summary: To delete category data
+  parameters:
+    - in: path
+      name: id
+      description: The category ID
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+      example: 1
+  tags:
+    - Category
+  responses:
+    200:
+      description: Success delete category data
+      content:
+        application/json:
+          schema:
+            $ref: "entity.yml#/schemas/ResponseDelete200"
+
+    422:
+      description: cannot delete category data
+      content:
+        application/json:
+          schema:
+            $ref: "entity.yml#/schemas/ResponseDelete422"

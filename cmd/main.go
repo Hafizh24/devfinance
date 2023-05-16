@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-contrib/cors"
@@ -63,8 +64,17 @@ func main() {
 	r.Use(
 		middleware.LoggingMiddleware(),
 		middleware.RecoveryMiddleware(),
-		cors.Default(),
-	)
+		cors.New(cors.Config{
+			AllowOrigins:     []string{"*"},
+			AllowMethods:     []string{"OPTIONS", "GET", "POST", "PATCH", "DELETE"},
+			AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "authorization"},
+			ExposeHeaders:    []string{"Content-Length"},
+			AllowCredentials: true,
+			AllowOriginFunc: func(origin string) bool {
+				return origin == "http://localhost"
+			},
+			MaxAge: 12 * time.Hour,
+		}))
 
 	// ---------------------------------------------------------------------------------------
 

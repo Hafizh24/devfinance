@@ -1,0 +1,92 @@
+get:
+  description: List currency data
+  summary: To get list currency data
+  tags:
+    - Registration
+  security:
+    - bearerAuth: []
+  responses:
+    200:
+      description: Success get list currency
+      content:
+        application/json:
+          schema:
+            $ref: "entity.yml#/schemas/ResponseCurrency200"
+          example:
+            status: success
+            message: success get list currency
+            data:
+              id: 1
+              code: "my currency"
+              description: "description for my currency"
+
+    401:
+      description: "Error: Unauthorized"
+      content:
+        application/json:
+          schema:
+            $ref: "./../common.yml#/schemas/ResponseUnauthorized401"
+          example:
+            status: error
+            message: request does not contain an access token
+            data:
+
+    422:
+      description: Cannot get list currency
+      content:
+        application/json:
+          schema:
+            $ref: "./../common.yml#/schemas/ResponseEntity422"
+          example:
+            status: error
+            message: Cannot Browse Currency
+            data:
+post:
+  description: create user data
+  summary: To create user data
+  tags:
+    - Registration
+  security: []
+
+  requestBody:
+    description: create a new user data
+    content:
+      application/json:
+        schema:
+          $ref: "entity.yml#/schemas/RequestRegistration"
+        examples:
+          User1:
+            value:
+              fullname: "John Doe"
+              username: "John"
+              password: "john1234"
+
+          User2:
+            value:
+              fullname: "john"
+              username: "John"
+              password: "john1"
+    required: true
+
+  responses:
+    201:
+      description: Success register user
+      content:
+        application/json:
+          schema:
+            $ref: "entity.yml#/schemas/ResponseCreate201"
+          example:
+            status: success
+            message: success register
+            data:
+
+    422:
+      description: format is not valid
+      content:
+        application/json:
+          schema:
+            $ref: "./../common.yml#/schemas/ResponseEntity422"
+          example:
+            status: error
+            message: request format is not valid
+            data:
