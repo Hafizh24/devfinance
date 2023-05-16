@@ -1,0 +1,63 @@
+schemas:
+  ResponseCurrency200:
+    type: object
+    properties:
+      status:
+        type: string
+      message:
+        type: string
+      data:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: integer
+            code:
+              type: string
+            description:
+              type: string
+
+  ResponseDetail200:
+    type: object
+    properties:
+      status:
+        type: string
+      message:
+        type: string
+      data:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: integer
+            code:
+              type: string
+            description:
+              type: string
+
+  ResponseCreate201:
+    type: object
+    properties:
+      status:
+        type: string
+      message:
+        type: string
+      data:
+        type: array
+        items:
+          type: object
+          properties:
+            code:
+              type: string
+            description:
+              type: string
+
+  RequestCreateCurrency:
+    type: object
+    properties:
+      code:
+        type: string
+      description:
+        type: string

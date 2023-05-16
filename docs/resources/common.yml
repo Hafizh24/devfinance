@@ -1,0 +1,20 @@
+schemas:
+  ResponseUnauthorized401:
+    type: object
+    properties:
+      status:
+        type: string
+      message:
+        type: string
+      data:
+        type: array
+
+  ResponseEntity422:
+    type: object
+    properties:
+      status:
+        type: string
+      message:
+        type: string
+      data:
+        type: array
