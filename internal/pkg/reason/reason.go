@@ -28,16 +28,17 @@ var (
 	TransactionNotFound        = "transaction not found"
 )
 var (
-	UserAlreadyExist = "user already exist"
-	RegisterFailed   = "cannot register user"
-	UserNotFound     = "user not found"
-	UserCannotDelete = "user cannot delete"
-	LoginFailed      = "login failed, please check your email or password"
-	SaveToken        = "cannot save refresh token"
-	UserSignOut      = "user has sign out"
-	UserNotLogin     = "user has not logged in yet"
-	NotAuthorized    = "You are not authorized to access this resource"
-	ErrAuthorize     = "error occurred when authorizing user"
+	UserAlreadyExist    = "user already exist"
+	RegisterFailed      = "cannot register user"
+	UserNotFound        = "user not found"
+	UserCannotDelete    = "user cannot delete"
+	LoginFailed         = "login failed, please check your email or password"
+	SaveToken           = "cannot save refresh token"
+	UserSignOut         = "user has sign out"
+	UserNotLogin        = "user has not logged in yet"
+	NotAuthorized       = "You are not authorized to access this resource"
+	ErrAuthorize        = "error occurred when authorizing user"
+	UserNotAuthenticate = "user does not have an authentication"
 )
 
 var (

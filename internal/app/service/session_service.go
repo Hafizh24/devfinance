@@ -123,7 +123,7 @@ func (ss *SessionService) Show(req *schema.ShowReq) (schema.ShowResp, error) {
 	_, err := ss.authRepo.GetByUserID(req.UserID)
 	if err != nil {
 		log.Error(fmt.Errorf("error LoginService - Get UserID : %w", err))
-		return resp, errors.New("cant get user_id")
+		return resp, errors.New(reason.UserNotAuthenticate)
 	}
 
 	user, _ := ss.userRepo.GetByID(req.UserID)
