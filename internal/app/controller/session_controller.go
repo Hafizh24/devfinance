@@ -89,6 +89,7 @@ func (sc *SessionController) ShowProfile(ctx *gin.Context) {
 	profile, err := sc.service.Show(req)
 	if err != nil {
 		handler.ResponseError(ctx, http.StatusUnprocessableEntity, err.Error())
+		return
 	}
 
 	handler.ResponseSuccess(ctx, http.StatusOK, "success", profile)

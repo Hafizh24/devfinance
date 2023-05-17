@@ -16,6 +16,8 @@ tags:
     description: CRUD data currency.
   - name: Registration
     description: register a new user.
+  - name: User
+    description: CRUD data user.
 
 paths:
   /api/categories:
@@ -29,8 +31,12 @@ paths:
 
   /api/currencies/{id}:
     $ref: "./resources/currencies/member.yml"
+
   /api/auth/signup:
     $ref: "./resources/registration/collection.yml"
+
+  /api/auth/showprofile:
+    $ref: "./resources/user/collection.yml"
 
 components:
   securitySchemes:

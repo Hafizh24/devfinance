@@ -1,0 +1,38 @@
+schemas:
+  ResponseShowProfile200:
+    type: object
+    properties:
+      status:
+        type: string
+      message:
+        type: string
+      data:
+        type: array
+        items:
+          type: object
+          properties:
+            fullname:
+              type: integer
+            user_since:
+              type: string
+            username:
+              type: string
+
+  ResponseDetail200:
+    type: object
+    properties:
+      status:
+        type: string
+      message:
+        type: string
+      data:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: integer
+            code:
+              type: string
+            description:
+              type: string
