@@ -33,7 +33,7 @@ var (
 	UserNotFound        = "user not found"
 	UserCannotDelete    = "user cannot delete"
 	LoginFailed         = "login failed, please check your email or password"
-	SaveToken           = "cannot save refresh token"
+	SaveToken           = "cannot save refresh token" // nolint:gosec
 	UserSignOut         = "user has sign out"
 	UserNotLogin        = "user has not logged in yet"
 	NotAuthorized       = "You are not authorized to access this resource"
