@@ -16,3 +16,10 @@ type Transaction struct {
 	Category
 	Currency
 }
+
+type BrowseTransaction struct {
+	Page     int
+	PageSize int
+	UserID   int    `db:"user_id"`
+	Type     string `db:"type"`
+}

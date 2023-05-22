@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	"fmt"
 
 	"mime/multipart"
 
@@ -51,7 +50,7 @@ func (ts *TransactionService) Create(req *schema.CreateTransactionReq) error {
 	return nil
 }
 
-func (ts *TransactionService) ShowAll(req *schema.GetTransactionReq) ([]schema.GetTransactionResp, error) {
+func (ts *TransactionService) BrowseAll(req *schema.BrowseTransactionReq) ([]schema.GetTransactionResp, error) {
 	var resp []schema.GetTransactionResp
 
 	existingUser, _ := ts.authrepo.GetByUserID(req.UserID)
@@ -59,35 +58,15 @@ func (ts *TransactionService) ShowAll(req *schema.GetTransactionReq) ([]schema.G
 		return nil, errors.New(reason.UserNotFound)
 	}
 
-	transactions, err := ts.transactionrepo.Browse(req.UserID)
+	dbSearch := model.BrowseTransaction{}
+	dbSearch.Page = req.Page
+	dbSearch.PageSize = req.PageSize
+	dbSearch.UserID = req.UserID
+	dbSearch.Type = req.Type
+
+	transactions, err := ts.transactionrepo.Browse(dbSearch)
 	if err != nil {
 		return nil, errors.New(reason.TransactionCannotBrowse)
-	}
-
-	for _, value := range transactions {
-		var respData schema.GetTransactionResp
-		respData.ID = value.ID
-		respData.Date = value.CreatedAt.Format("02-01-2006")
-		respData.Amount = value.TotalAmount
-		respData.Category = value.Name
-		respData.Type = value.Type
-		respData.Note = value.Note
-		respData.ImageUrl = value.ImageUrl
-		resp = append(resp, respData)
-	}
-
-	return resp, nil
-}
-
-func (ts *TransactionService) GetByType(req *schema.GetTransactionReq) ([]schema.GetTransactionResp, error) {
-	var resp []schema.GetTransactionResp
-	// var respData schema.GetTransactionResp
-
-	fmt.Println(req.UserID)
-
-	transactions, err := ts.transactionrepo.GetByType(req.Type, req.UserID)
-	if err != nil {
-		return nil, errors.New(reason.TransactionCannotGetDetail)
 	}
 
 	for _, value := range transactions {

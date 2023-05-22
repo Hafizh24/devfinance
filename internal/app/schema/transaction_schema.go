@@ -11,11 +11,6 @@ type GetTransactionResp struct {
 	Note     string  `json:"note"`
 	ImageUrl *string `json:"image_url"`
 }
-type GetTransactionReq struct {
-	UserID int    `json:"user_id"`
-	Type   string `validate:"required,oneof=expenses income" json:"type"`
-}
-
 type CreateTransactionReq struct {
 	Type       string                `validate:"required,oneof=expenses income" form:"type"`
 	Note       string                `validate:"required" form:"note"`
@@ -32,4 +27,11 @@ type UpdateTransactionReq struct {
 	Amount     int    `validate:"required" json:"amount"`
 	CategoryID int    `validate:"required" json:"category_id"`
 	CurrencyID int    `validate:"required" json:"currency_id"`
+}
+
+type BrowseTransactionReq struct {
+	Page     int
+	PageSize int
+	UserID   int    `json:"user_id"`
+	Type     string `validate:"omitempty,oneof=expenses income" json:"type"`
 }
