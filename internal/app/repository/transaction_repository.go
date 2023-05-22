@@ -30,31 +30,32 @@ func (tr *TransactionRepository) Create(Transaction model.Transaction) error {
 	return nil
 }
 
-func (tr *TransactionRepository) Browse(UserID int) ([]model.Transaction, error) {
+func (tr *TransactionRepository) Browse(search model.BrowseTransaction) ([]model.Transaction, error) {
 
 	var (
+		limit        = search.PageSize
+		offset       = limit * (search.Page - 1)
+		UserID       = search.UserID
+		Type         = search.Type
 		transactions []model.Transaction
 		sqlStatement = `
 	SELECT transactions.id,transactions.type,transactions.note,transactions.amount,transactions.image_url,transactions.created_at,categories.name,currencies.code || ' ' || transactions.amount AS total_amount
 	FROM transactions
 	INNER JOIN categories ON transactions.category_id = categories.id
 	INNER JOIN currencies ON transactions.currency_id = currencies.id
-	WHERE transactions.user_id = $1
+	WHERE transactions.user_id = $1 AND ($2 = '' OR transactions.type = $2)
 	ORDER BY transactions.created_at DESC
+	LIMIT $3
+	OFFSET $4
 	`
 	)
-	rows, err := tr.DB.Queryx(sqlStatement, UserID)
+
+	err := tr.DB.Select(&transactions, sqlStatement, UserID, Type, limit, offset)
 	if err != nil {
 		log.Error(fmt.Errorf("error Transaction Repository - Browse : %w", err))
-		return transactions, err
+		return nil, err
 	}
 
-	for rows.Next() {
-		var Transaction model.Transaction
-		// nolint:errcheck
-		rows.StructScan(&Transaction)
-		transactions = append(transactions, Transaction)
-	}
 	return transactions, nil
 }
 
@@ -72,33 +73,6 @@ func (tr *TransactionRepository) GetByID(id string) (model.Transaction, error) {
 	}
 
 	return Transaction, nil
-}
-func (tr *TransactionRepository) GetByType(Type string, UserID int) ([]model.Transaction, error) {
-	var transactions []model.Transaction
-
-	var sqlStatement = `
-	SELECT transactions.id,transactions.type,transactions.note,transactions.amount,image_url,transactions.created_at,categories.name,currencies.code || ' ' || transactions.amount AS total_amount
-	FROM transactions
-	INNER JOIN categories ON transactions.category_id = categories.id
-	INNER JOIN currencies ON transactions.currency_id = currencies.id
-	WHERE transactions.type = $1 AND transactions.user_id = $2
-	`
-
-	rows, err := tr.DB.Queryx(sqlStatement, Type, UserID)
-
-	if err != nil {
-		log.Error(fmt.Errorf("error Transaction Repository - GetByType : %w", err))
-		return transactions, err
-	}
-
-	for rows.Next() {
-		var Transaction model.Transaction
-		// nolint:errcheck
-		rows.StructScan(&Transaction)
-		transactions = append(transactions, Transaction)
-	}
-
-	return transactions, nil
 }
 
 func (tr *TransactionRepository) Update(id string, Transaction model.Transaction) error {

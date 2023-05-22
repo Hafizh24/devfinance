@@ -136,8 +136,7 @@ func main() {
 		secured.PATCH("/currencies/:id", middleware.AuthorizationMiddleware("currencies", "write", enforcer), currencyController.UpdateCurrency)
 		secured.DELETE("/currencies/:id", middleware.AuthorizationMiddleware("currencies", "write", enforcer), currencyController.DeleteCurrency)
 
-		secured.GET("/transactions/recaps", middleware.AuthorizationMiddleware("transactions", "read", enforcer), transactionController.ShowRecaps)
-		secured.GET("/transactions/recaps/:type", middleware.AuthorizationMiddleware("transactions", "read", enforcer), transactionController.ShowByType)
+		secured.GET("/transactions/recaps", middleware.AuthorizationMiddleware("transactions", "read", enforcer), middleware.PaginationMiddleware(cfg.PaginateDefaultPage, cfg.PaginateDefaultPageSize, cfg.PaginateDefaultType), transactionController.BrowseTransaction)
 		secured.POST("/transactions", middleware.AuthorizationMiddleware("transactions", "write", enforcer), transactionController.CreateTransaction)
 		secured.GET("/transactions/:id", middleware.AuthorizationMiddleware("transactions", "write", enforcer), transactionController.DetailTransaction)
 		secured.DELETE("/transactions/:id", middleware.AuthorizationMiddleware("transactions", "write", enforcer), transactionController.DeleteTransaction)

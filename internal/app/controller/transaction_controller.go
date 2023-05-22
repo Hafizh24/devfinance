@@ -17,13 +17,20 @@ func NewTransactionController(service TransactionService) *TransactionController
 	return &TransactionController{service: service}
 }
 
-func (tc *TransactionController) ShowRecaps(ctx *gin.Context) {
+func (tc *TransactionController) BrowseTransaction(ctx *gin.Context) {
 	id, _ := strconv.Atoi(ctx.GetString("user_id"))
-	req := &schema.GetTransactionReq{}
+	req := &schema.BrowseTransactionReq{}
 
+	req.Page = ctx.GetInt("page")
+	req.PageSize = ctx.GetInt("page_size")
+	req.Type = ctx.GetString("type")
 	req.UserID = id
 
-	resp, err := tc.service.ShowAll(req)
+	if handler.BindAndCheck(ctx, req) {
+		return
+	}
+
+	resp, err := tc.service.BrowseAll(req)
 	if err != nil {
 		handler.ResponseError(ctx, http.StatusUnprocessableEntity, err.Error())
 		return
@@ -49,27 +56,6 @@ func (tc *TransactionController) CreateTransaction(ctx *gin.Context) {
 	}
 
 	handler.ResponseSuccess(ctx, http.StatusCreated, "success create transaction", req)
-}
-
-func (tc *TransactionController) ShowByType(ctx *gin.Context) {
-	id, _ := strconv.Atoi(ctx.GetString("user_id"))
-	param, _ := ctx.Params.Get("type")
-	req := &schema.GetTransactionReq{}
-
-	req.UserID = id
-	req.Type = param
-
-	if handler.BindAndCheck(ctx, req) {
-		return
-	}
-
-	resp, err := tc.service.GetByType(req)
-	if err != nil {
-		handler.ResponseError(ctx, http.StatusUnprocessableEntity, err.Error())
-		return
-	}
-
-	handler.ResponseSuccess(ctx, http.StatusOK, "success get detail transaction", resp)
 }
 
 func (tc *TransactionController) DetailTransaction(ctx *gin.Context) {
